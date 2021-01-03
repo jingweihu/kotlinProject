@@ -7,6 +7,10 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.laioffer.kotlin.data.ForecastRequest
+import com.laioffer.kotlin.domain.commands.Command
+import com.laioffer.kotlin.domain.mappers.ForecastDataMapper
+import com.laioffer.kotlin.domain.model.ForecastList
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,17 +34,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val forecastList = findViewById<RecyclerView>(R.id.forecast_list)
         forecastList.layoutManager = LinearLayoutManager(this)
-        forecastList.adapter = ForecastListAdapter(items)
 
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
-                Request(url).run()
+                RequestForecastCommand("94043").execute()
             }
-            toast(result)
+            forecastList.adapter = ForecastListAdapter(result)
         }
     }
 
     fun Context.toast(message: CharSequence, duration: Int = Toast.LENGTH_LONG) {
         Toast.makeText(this, message, duration).show()
+    }
+
+
+    class RequestForecastCommand(val zipCode: String): Command<ForecastList> {
+        override suspend fun execute(): ForecastList {
+            val forecastRequest = ForecastRequest(zipCode)
+            return ForecastDataMapper().convertFromDataModel(forecastRequest.execute())
+        }
     }
 }
