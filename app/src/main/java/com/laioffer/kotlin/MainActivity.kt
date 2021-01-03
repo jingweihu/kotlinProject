@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.laioffer.kotlin.data.ForecastRequest
 import com.laioffer.kotlin.domain.commands.Command
 import com.laioffer.kotlin.domain.mappers.ForecastDataMapper
+import com.laioffer.kotlin.domain.model.Forecast
 import com.laioffer.kotlin.domain.model.ForecastList
 import kotlinx.coroutines.*
 
@@ -39,7 +40,11 @@ class MainActivity : AppCompatActivity() {
             val result = withContext(Dispatchers.IO) {
                 RequestForecastCommand("94043").execute()
             }
-            forecastList.adapter = ForecastListAdapter(result)
+            forecastList.adapter = ForecastListAdapter(result, object: ForecastListAdapter.OnItemClickListener {
+                override fun invoke(forecast: Forecast) {
+                    toast(forecast.date)
+                }
+            })
         }
     }
 
