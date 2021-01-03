@@ -10,7 +10,7 @@ import com.laioffer.kotlin.domain.model.Forecast
 import com.laioffer.kotlin.domain.model.ForecastList
 import com.squareup.picasso.Picasso
 
-class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: ForecastListAdapter.OnItemClickListener) :
+class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: (Forecast) -> Unit) :
     RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -28,7 +28,7 @@ class ForecastListAdapter(val weekForecast: ForecastList, val itemClick: Forecas
        holder.bindForecast(weekForecast[position])
     }
 
-    class ViewHolder(val view: View, val itemClick: OnItemClickListener) :
+    class ViewHolder(val view: View, val itemClick: (Forecast) -> Unit) :
         RecyclerView.ViewHolder(view) {
 
         private val iconView = view.findViewById<ImageView>(R.id.icon)
