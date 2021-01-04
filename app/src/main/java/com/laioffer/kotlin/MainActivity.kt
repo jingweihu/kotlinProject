@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    class RequestForecastCommand(val zipCode: String): Command<ForecastList> {
+    class RequestForecastCommand(private val zipCode: String): Command<ForecastList> {
         override suspend fun execute(): ForecastList {
             val forecastRequest = ForecastRequest(zipCode)
             return ForecastDataMapper().convertFromDataModel(forecastRequest.execute())
